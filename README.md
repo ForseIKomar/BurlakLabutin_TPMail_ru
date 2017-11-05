@@ -1,2 +1,2 @@
 # BurlakLabutin_TPMail_ru
-checkers
+Проект по курсу "Углубленное программирование на С/С++"
