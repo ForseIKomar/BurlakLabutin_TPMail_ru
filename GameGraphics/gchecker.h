@@ -20,3 +20,5 @@ private:
 };
 
 #endif // GCHECKER_H
+
+// Класс для отрисовки шашки

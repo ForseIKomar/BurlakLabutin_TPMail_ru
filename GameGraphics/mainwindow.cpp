@@ -14,11 +14,11 @@ MainWindow::MainWindow(QWidget *parent) :
 
     ui->graphicsView->setGeometry(0, 0, scaling * 8 + 2, scaling * 8 + 2);
 
-    scene = new Graphics();
+    scene = new Game();
     scene->setScaling(scaling);
     scene->setLabel(ui->label);
     scene->setSceneRect(0, 0, scaling * 8, scaling * 8);
-    scene->generateNewGraphics();
+    scene->startNewGame();
 
     ui->graphicsView->setScene(scene);
 }

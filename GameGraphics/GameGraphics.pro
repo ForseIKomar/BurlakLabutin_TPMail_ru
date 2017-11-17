@@ -30,7 +30,8 @@ SOURCES += \
     gfigure.cpp \
     gchecker.cpp \
     gqueen.cpp \
-    glight.cpp
+    glight.cpp \
+    game.cpp
 
 HEADERS += \
         mainwindow.h \
@@ -38,7 +39,8 @@ HEADERS += \
     gfigure.h \
     gchecker.h \
     gqueen.h \
-    glight.h
+    glight.h \
+    game.h
 
 FORMS += \
         mainwindow.ui

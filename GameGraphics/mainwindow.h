@@ -3,7 +3,7 @@
 
 #include <QMainWindow>
 
-#include "graphics.h"
+#include "game.h"
 
 namespace Ui {
 class MainWindow;
@@ -19,7 +19,7 @@ public:
 
 private:
     Ui::MainWindow *ui;
-    Graphics *scene;
+    Game *scene;
 };
 
 #endif // MAINWINDOW_H

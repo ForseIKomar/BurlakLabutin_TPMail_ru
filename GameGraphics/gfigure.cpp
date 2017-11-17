@@ -9,7 +9,7 @@ GFigure::~GFigure(){
 }
 
 QRectF GFigure::boundingRect() const{
-    return QRectF(0, 0, sc, sc);
+    return QRectF(0, 0, sc, sc);  // Показывает зону отрисовки
 }
 
 void GFigure::setColor(QColor color){

@@ -22,26 +22,35 @@ public:
     ~Graphics();
 
 private:
-    QVector <GFigure *> Checkers;
-    QVector <GLight *> Lighting;
+    QVector <GFigure *> Checkers;   // Вектор фигур на доске для их отрисовки
+    QVector <GLight *> Lighting;    // То же самое для подсветки
 
-    GFigure *Choosen;
+    GFigure *Choosen;               // Выбранная шашка (Потом уйдет в логику)
 
-    QLabel *logs;
-    int sc; // scaling - shows size of one cell
+    int sc;
 
 public:
-    void setLabel(QLabel *label);
-    void setScaling(int scl);
-    void generateNewGraphics();
+    void setLabel(QLabel *label);   // Установка label для вывода логов
+    void setScaling(int scl);       // Установка масштабирования
+    void generateNewGraphics();     // Очистка доски и построение игры заного (Позже будет не нужно)
 
-private:
-    void addChecker(int x, int y, QColor color);
-    void addLighting(int x, int y, QColor color);
+protected:
+    void addChecker(int x, int y, QColor color);  // Добавление Шашки на клетку
+    void addLighting(int x, int y, QColor color);  // Добавление подсветки на клетку
 
+    void MoveChecker(int x1, int y1, int x2, int y2);
+
+    virtual void touch(int x, int y) = 0;
     // Для передачи передвижения.
     void mousePressEvent(QGraphicsSceneMouseEvent * event);
+
+
+    QLabel *logs;
 
 };
 
 #endif // GRAPHICS_H
+
+/*
+    Этот класс создан для отображения всей игровой графики
+ */

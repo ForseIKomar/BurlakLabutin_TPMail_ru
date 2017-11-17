@@ -21,7 +21,6 @@ void Graphics::generateNewGraphics(){
     Checkers.clear();
     Lighting.clear();
     Choosen = NULL;
-
     QPen pen;
     pen.setColor(Qt::black);
     for (int i = 0; i < 8; ++i)
@@ -32,6 +31,7 @@ void Graphics::generateNewGraphics(){
                 addRect(i * sc, j * sc, sc, sc, pen, Qt::gray);
         }
 
+    /*
     for (int i = 0; i <= 2; ++i)
         for (int j = 0; j < 4; ++j){
             addChecker(j * 2 + (i + 1) % 2, i, Qt::black);
@@ -46,6 +46,7 @@ void Graphics::generateNewGraphics(){
     for (int i = 7; i >= 5; i--)
         for (int j = 0; j < 4; ++j)
             addChecker(j * 2 + (i + 1) % 2, i, Qt::white);
+    */
 }
 
 void Graphics::addChecker(int x, int y, QColor color){
@@ -70,7 +71,7 @@ void Graphics::addLighting(int x, int y, QColor color){
 }
 
 void Graphics::mousePressEvent(QGraphicsSceneMouseEvent *event){
-    QString c;
+    /*QString c;
     if (Choosen == NULL)
         c = "no choosen";
     else
@@ -94,5 +95,14 @@ void Graphics::mousePressEvent(QGraphicsSceneMouseEvent *event){
         Choosen->setPos((int)(event->scenePos().x() / sc) * sc,
                 (int)(event->scenePos().y() / sc) * sc);
         Choosen = NULL;
+    }*/
+    touch((int)(event->scenePos().x() / sc), (int)(event->scenePos().y() / sc));
+}
+
+void Graphics::MoveChecker(int x1, int y1, int x2, int y2){
+    for (int i = 0; i < Checkers.size(); ++i){
+        if (x1 == (int)(Checkers[i]->pos().x()  / sc) &&
+                y1 == (int)(Checkers[i]->pos().y()  / sc))
+            Checkers[i]->setPos(x2 * sc, y2 * sc);
     }
 }
