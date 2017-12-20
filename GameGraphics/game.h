@@ -2,14 +2,10 @@
 #define GAME_H
 
 #include "graphics.h"
+#include "point.hpp"
 #include <vector>
 
-struct Point{
-    Point(int x, int y);
-    int x, y;
-};
-
-typedef std::vector<Point> Vector_2;
+typedef std::vector<SPoint> Vector_2;
 typedef std::vector<Vector_2> Vector_3;
 
 
@@ -26,17 +22,17 @@ private:
     Vector_2 whatCanMove;
     Vector_2 whereCanAttack;
     bool canAttack;
-    Point *choosen;
+    SPoint *choosen;
 
 public:
     void touch(int x, int y);
     void startNewGame();
 private:
-    Vector_2 CheckMovies(Vector_3 vec, Point me);
-    Vector_2 CheckAttacks(Vector_3 vec, Point me);
+    Vector_2 CheckMovies(Vector_3 vec, SPoint me);
+    Vector_2 CheckAttacks(Vector_3 vec, SPoint me);
     Vector_2 CheckCheckers();
-    void Move(Point x1, Point x2);
-    void Attack(Point x1, Point x2);
+    void Move(SPoint x1, SPoint x2);
+    void Attack(SPoint x1, SPoint x2);
     void EndTurn();
 };
 

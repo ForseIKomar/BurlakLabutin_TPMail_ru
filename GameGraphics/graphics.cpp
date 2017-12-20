@@ -59,6 +59,15 @@ void Graphics::addChecker(int x, int y, QColor color){
     addItem(newitem);
 }
 
+void Graphics::addQueen(int x, int y, QColor color){
+    GQueen *newitem = new GQueen(color);
+    newitem->setPos(x * sc, y * sc);
+    newitem->setScaling(sc);
+
+    Checkers.push_back(newitem);
+    addItem(newitem);
+}
+
 void Graphics::addLighting(int x, int y, QColor color){
 
     GLight *newitem = new GLight();
@@ -71,38 +80,28 @@ void Graphics::addLighting(int x, int y, QColor color){
 }
 
 void Graphics::mousePressEvent(QGraphicsSceneMouseEvent *event){
-    /*QString c;
-    if (Choosen == NULL)
-        c = "no choosen";
-    else
-        c = "choosen at " + QString::number(Choosen->pos().x()) + ' ' +
-                QString::number(Choosen->pos().y());
-    logs->setText(
-                QString::number(event->scenePos().x())
-                + ' ' +
-                QString::number(event->scenePos().y()) + ' ' + c
-                );
-
-    if (Choosen == NULL){
-        for (int i = 0; i < Checkers.size(); ++i){
-            if ( (int)(event->scenePos().x() / sc) == (int)(Checkers[i]->pos().x() / sc) &&
-                 (int)(event->scenePos().y() / sc) == (int)(Checkers[i]->pos().y() / sc)){
-                Choosen = Checkers[i];
-            }
-        }
-    }
-    else{
-        Choosen->setPos((int)(event->scenePos().x() / sc) * sc,
-                (int)(event->scenePos().y() / sc) * sc);
-        Choosen = NULL;
-    }*/
     touch((int)(event->scenePos().x() / sc), (int)(event->scenePos().y() / sc));
 }
 
-void Graphics::MoveChecker(int x1, int y1, int x2, int y2){
+void Graphics::MoveChecker(SPoint x1, SPoint x2){
     for (int i = 0; i < Checkers.size(); ++i){
-        if (x1 == (int)(Checkers[i]->pos().x()  / sc) &&
-                y1 == (int)(Checkers[i]->pos().y()  / sc))
-            Checkers[i]->setPos(x2 * sc, y2 * sc);
+        if (x1.x == (int)(Checkers[i]->pos().x()  / sc) &&
+                x1.y == (int)(Checkers[i]->pos().y()  / sc))
+            Checkers[i]->setPos(x2.x * sc, x2.y * sc);
     }
+}
+
+void Graphics::deleteGFigure(int x, int y){
+    int i = 0;
+    int c = 0;
+    while (i < Checkers.size()){
+        if (x == (int)(Checkers[i]->pos().x()  / sc) &&
+                y == (int)(Checkers[i]->pos().y()  / sc))
+        {
+            removeItem(Checkers[i]);
+            Checkers.remove(i);
+        }
+        i++;
+    }
+
 }

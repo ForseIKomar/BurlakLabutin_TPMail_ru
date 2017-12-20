@@ -11,6 +11,7 @@
 #include "gchecker.h"
 #include "gqueen.h"
 #include "glight.h"
+#include "point.hpp"
 
 class Graphics: public QGraphicsScene
 {
@@ -35,10 +36,13 @@ public:
     void generateNewGraphics();     // Очистка доски и построение игры заного (Позже будет не нужно)
 
 protected:
-    void addChecker(int x, int y, QColor color);  // Добавление Шашки на клетку
-    void addLighting(int x, int y, QColor color);  // Добавление подсветки на клетку
+    void addChecker(int x, int y, QColor color);    // Добавление Шашки на клетку
+    void addLighting(int x, int y, QColor color);   // Добавление подсветки на клетку
+    void addQueen(int x, int y, QColor color);      // Добавление Дамки на клетку
 
-    void MoveChecker(int x1, int y1, int x2, int y2);
+    void deleteGFigure(int x, int y);               // Удаление фигуры с доски ( При смерти фигуры )
+
+    void MoveChecker(SPoint x1, SPoint x2);
 
     virtual void touch(int x, int y) = 0;
     // Для передачи передвижения.

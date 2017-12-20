@@ -31,7 +31,12 @@ SOURCES += \
     gchecker.cpp \
     gqueen.cpp \
     glight.cpp \
-    game.cpp
+    game.cpp  \
+    board.cpp \
+    cell.cpp \
+    checker.cpp \
+    figure.cpp \
+    queen.cpp
 
 HEADERS += \
         mainwindow.h \
@@ -40,7 +45,13 @@ HEADERS += \
     gchecker.h \
     gqueen.h \
     glight.h \
-    game.h
+    game.h \
+    point.hpp \
+    board.hpp \
+    cell.h \
+    checker.hpp \
+    figure.hpp \
+    queen.hpp
 
 FORMS += \
         mainwindow.ui
