@@ -18,6 +18,14 @@ typedef struct Point{
         {}
 } SPoint; // координаты клетки на доске
 
+
+class CCell{
+public:
+	CCell( SPoint );
+};
+class CFigure;
+
+
 class CBoard{
 private:
     std::array<std::array<std::shared_ptr<CCell>, kBoardSideSize>, kBoardSideSize> game_field_;
@@ -25,31 +33,41 @@ public:
     CBoard();
 
     void SetCheckers(); // расстановка шашек на доске
-    std::shared_ptr<CCell> GetCell( short i_row, short i_column ); 
-	void WhoCanAttack( std::vector<std::shared_ptr<CFigure>> &potential_figures );
-	void WhoCanMove(   std::vector<std::shared_ptr<CFigure>> &potential_figures );
+    std::shared_ptr<CCell>& GetCell( short i_row, short i_column ); 
+	void WhoCanAttack( std::vector<std::shared_ptr<CFigure>> &potential_figures, char color );
+	void WhoCanMove(   std::vector<std::shared_ptr<CFigure>> &potential_figures, char color );
 }; // игровое поле
 
-std::shared_ptr<CCell> GetCell( short i_row, short i_cell )
+std::shared_ptr<CCell>& CBoard::GetCell( short i_row, short i_column )
 {
-	if( i_row >= 0 && i_row < kBoardSideSize && i_cell >= 0 && i_cell < kBoardSideSize ){
-		return game_field_[i_row][i_cell];
-	} else{
-		return nullptr;
+	if( i_row < 0 ){
+		i_row = 0;
 	}
+	if( i_row >= kBoardSideSize ){
+		i_row = kBoardSideSize - 1;
+	}
+
+	if( i_column < 0 ){
+		i_column = 0;
+	}
+	if( i_column >= kBoardSideSize ){
+		i_column = kBoardSideSize - 1;
+	}
+
+	return game_field_[i_row][i_column];
 }
 
 CBoard::CBoard()
 {
     // координаты клеток: нумеруются с 0 !!!
     short i_row = 0;  // номер строки
-    short i_cell = 0; // номер столбца
+    short i_column = 0; // номер столбца
 
     // создание доски с пустыми клетками
     for( auto &row: game_field_ ){
         for( auto &cell: row ){
-            cell( new CCell( SPoint( i_cell, i_row ) ) );
-            ++i_cell;
+            cell( new CCell( SPoint( i_column, i_row ) ) );
+            ++i_column;
         }
         ++i_row;
     }
@@ -58,17 +76,17 @@ CBoard::CBoard()
 void CBoard::SetCheckers()
 {
     short cell_x[] = { 1, 0 }; // номера клеток по столбцам с фигурами
-    short cell_row_count = ( kBoardSideSize - 2 ) / 2; // количество строк с фигурами одного цвета
+    short cells_row_count = ( kBoardSideSize - 2 ) / 2; // количество строк с фигурами одного цвета
     // расстановка чёрных шашек
     for( short i_row = 0; i_row < cells_row_count; ++i_row ){
-        for( short i_cell = cell_x[ i_row % 2 ]; i_cell < kBoardSideSize; i_cell += 2 ){
-            (game_field_[i_row][i_cell])( new CChecker( 'B', game_field_[i_row][i_cell] ) );
+        for( short i_column = cell_x[ i_row % 2 ]; i_column < kBoardSideSize; i_column += 2 ){
+            (game_field_[i_row][i_column])( new CChecker( 'B', game_field_[i_row][i_column] ) );
         }
     }
     // расстановка белых шашек
     for( short i_row = cells_row_count + 2; i_row < kBoardSideSize; ++i_row ){
-        for( short i_cell = cell_x[i_row%2]; i_cell < kBoardSideSize; i_cell += 2 ){
-            (game_field_[i_row][i_cell])( new CChecker( 'W', game_field_[i_row][i_cell] ) );
+        for( short i_column = cell_x[i_row%2]; i_column < kBoardSideSize; i_column += 2 ){
+            (game_field_[i_row][i_column])( new CChecker( 'W', game_field_[i_row][i_column] ) );
         }
     }
 }
@@ -107,6 +125,7 @@ void CBoard::WhoCanAttack( std::vector<std::shared_ptr<CFigure>> &potential_figu
 	}
 }
 
+
 class CCell{
 private:
     SPoint point_; // координаты
@@ -116,14 +135,14 @@ public:
     CCell( SPoint point )
         : point_( point ), figure_( nullptr )
     {}
-    CCell( std::shared_ptr<CFigure> figure )
+    CCell( std::shared_ptr<CFigure> &figure )
         : figure_( figure )
     {}
 
-    static void SetBoard( std::shared_ptr<CBoard> board )
+    static void SetBoard( std::shared_ptr<CBoard>& board )
         : game_field( board )
     {}
-    static std::shared_ptr<CBoard> GetBoard()
+    static std::shared_ptr<CBoard>& GetBoard()
     {
         return game_field_;
     }
@@ -145,10 +164,11 @@ public:
         return point_.x;
     }
 
-    std::shared_ptr<CFigure> GetFigure();
+    std::shared_ptr<CFigure>& GetFigure();
 }; // клетка
 
-std::shared_ptr<CFigure> CCell::GetFigure()
+
+std::shared_ptr<CFigure>& CCell::GetFigure()
 {
     return figure_;
 }
@@ -158,7 +178,7 @@ private:
 	char figure_color_;
 	std::shared_ptr<CCell> figure_cell_; // клетка, на которой расположена фигура
 public:
-	CFigure( char figure_color, std::shared_ptr<CCell> figure_cell )
+	CFigure( char figure_color, std::shared_ptr<CCell>& figure_cell )
 		: figure_color_( figure_color ), figure_cell_( figure_cell )
 	{}
 
@@ -166,7 +186,7 @@ public:
 	{
 		return figure_color_;
 	}
-	std::shared_ptr<CCell> GetCell()
+	std::shared_ptr<CCell>& GetCell()
 	{
 		return figure_cell_;
 	}
@@ -175,8 +195,8 @@ public:
 	virtual void WhereCanAttack( std::vector<std::shared_ptr<CCell>> &potential_cells ) = 0;
 	bool CanMove();
 	bool CanAttack();
-	void Move(   short i_row, short i_column ); // ход в данную клетку - не реализован
-	void Attack( short i_row, short i_column ); // атаковать и перейти в данную клетку - не реализован
+	void Move(   short i_row, short i_column ) = 0; // ход в данную клетку - не реализован
+	void Attack( short i_row, short i_column ) = 0; // атаковать и перейти в данную клетку - не реализован
 };
 
 bool CFigure::CanMove()
@@ -211,7 +231,18 @@ public:
 	void WhereCanAttack( std::vector<std::shared_ptr<CCell>> &potential_cells );
 	bool CanMove();
 	bool CanAttack();
+	void Move( short i_row, short i_column );
+	void Attack( short i_row, short i_column ); 
 };
+
+void CChecker::Move( short i_row, short i_column )
+{
+	std::shared_ptr<CCell> new_cell = CCell::GetBoard() -> GetCell( i_row, i_column );
+	std::shared_ptr<CCell> this_cell = figure_cell_;
+	figure_cell_ = new_cell;
+	
+
+}
 
 void CChecker::WhereCanMove( std::vector<std::shared_ptr<CCell>> &potential_cells )
 {

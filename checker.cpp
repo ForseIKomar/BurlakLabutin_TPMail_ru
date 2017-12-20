@@ -1,0 +1,74 @@
+#include "checker.hpp"
+
+CChecker::CChecker( char checker_color )
+	: CFigure( checker_color )
+{}
+
+
+void CChecker::WhereCanMove( std::vector<std::shared_ptr<CCell>> &potential_cells )
+{
+	short i_row = figure_cell_ -> GetRowNumber();
+	short i_column = figure_cell_ -> GetColumnNumber();
+	// номер строки новой клетки
+	short i_new_row = ( figure_color_ == 'W' ) ? i_row - 1 : i_row + 1;
+	// изменение номера столбца клетки
+	short add[] = { -1, 1 };
+
+	std::shared_ptr<CCell> new_cell = nullptr;
+	for( short j = 0; j < 2; ++j ){
+		new_cell = CCell::GetBoard() -> GetCell( i_new_row, i_column + add[j] );
+		if( new_cell != nullptr && new_cell -> IsEmpty() ){
+			potential_cells.push_back( new_cell );
+		}
+	}
+}
+
+
+void CChecker::WhereCanAttack( std::vector<std::shared_ptr<CCell>> &potential_cells )
+{
+	short i_row  = figure_cell_ -> GetRowNumber();
+	short i_column = figure_cell_ -> GetColumnNumber();
+	
+	// номер строки с фигурой противника
+	short i_enemy_row = ( figure_color_ == 'W' ) ? i_row - 1 : i_row + 1;
+	// номер строки с клеткой для перехода
+	short i_move_row  = ( figure_color_ == 'W' ) ? i_enemy_row - 1 : i_enemy_row + 1;
+	// изменение номера столбца клетки с фигурой противника и клетки для хода 
+	short add[][] = { { -1, -2 }, // влево
+					  {  1,  2 } // вправо
+					};
+	
+	std::shared_ptr<CCell> enemy_cell = nullptr;
+	std::shared_ptr<CCell> move_cell  = nullptr;
+	for( short j = 0; j < 2; ++j ){
+		enemy_cell = CCell::GetBoard() -> GetCell( i_enemy_row, i_column + add[j][0] );
+		move_cell  = CCell::GetBoard() -> GetCell( i_move_row,  i_column + add[j][1] );
+		if( move_cell != nullptr && move_cell -> IsEmpty() && enemy_cell -> HasFigure() &&
+		    figure_color_ != enemy_cell -> GetFigure() -> GetColor() )
+		{
+			potential_cells.push_back( move_cell );
+		}
+	}
+}
+
+/*
+void CChecker::Move( short i_row, short i_column )
+{
+	std::shared_ptr<CCell> new_cell = CCell::GetBoard() -> GetCell( i_row, i_column );
+	(new_cell -> GetFigure())( new CChecker( figure_cell_, new_cell ) );
+	//std::shared_ptr<CCell> this_cell = figure_cell_;
+	//figure_cell_ = new_cell;
+	delete *( figure_cell_ -> GetFigure() ); 
+}
+*/
+
+CChecker& CChecker::operator= ( const CChecker &current_checker )
+{
+	if( *this == *current_checker ){
+		return *this;
+	}
+
+
+	figure_color_ = current_checker -> GetColor();
+	figure_cell_ = current_checker -> GetCell();
+}
